@@ -1,3 +1,5 @@
+# Introduction
+
 Wanna have a private zone to record some special moment, some unforgettable memory?
 
 Wanna have a quite place to speak-out-loud but not to afraid of the mass followers of your social media?
@@ -25,3 +27,35 @@ Everytime you update your status, your timeline changes too:
 Also, you can share your status to social or delete your status as long as you want to.
 
 [See More of DailyLife](https://blog.tan90.co/DailyLife)
+
+# Demo
+
+See the DailyLife page of me:
+[DailyLife](https://dailylife.tan90.co)
+
+# Installation
+
+1. Download the projects
+```
+git clone https://github.com/lanceWan/larablog.git
+```
+
+2. Modify `conn.php` to your own mysql server and datebase.
+
+3. Create a new table `dailylife` in your database use `sql.sql`
+```
+mysql
+use database;
+create table dailylife
+(
+   statusDate         varchar(50) not null,
+   statusContent      text,
+   hashTag            varchar(50) not null,
+   id                 INT(11) not null AUTO_INCREMENT,
+   primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+4. Encrypt folder `admin`
+
+5. Done!
