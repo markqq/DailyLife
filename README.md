@@ -37,7 +37,7 @@ See the DailyLife page of me:
 
 1. Download the projects
 ```
-git clone https://github.com/lanceWan/larablog.git
+git clone https://github.com/markqq/DailyLife.git
 ```
 
 2. Modify `conn.php` to your own mysql server and datebase.
