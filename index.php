@@ -7,19 +7,12 @@ if(isset($_GET["page"])){
   $page = 1;
 }
 $sql = mysql_query("select * from dailylife");
-$datarow = mysql_num_rows($sql);
 $showed = ($page - 1) * $numberEachTime;
 $data = array();
 while($rows = mysql_fetch_array($sql)){
   $data[] = $rows;
   $data[$rows['id']] = $rows;
   $lastUpdate = $data[$rows['id']]["statusDate"];
-}
-$index = 0;
-if($showed + $numberEachTime < $datarow){
-  $outputNum = $numberEachTime;
-}else{
-  $outputNum = $datarow;
 }
 $outputHTML = "";
 function monthTrans($month){
@@ -63,8 +56,7 @@ function monthTrans($month){
     }
     return $re;
 }
-$temp = 0;
-for($i=$showed;$i<$showed+$outputNum;$i++){
+for($i=$showed;$i<$showed+$numberEachTime;$i++){
   if(!isset($data[$i])){
     continue;
   }
@@ -77,9 +69,8 @@ for($i=$showed;$i<$showed+$outputNum;$i++){
   $timeDay = $timeStr[2];
   
   $outputHTML = $outputHTML . '<div class="statusItem" data-id="'.$data[$i]["id"].'"><div class="statusItemTitle"><span class="big">'.$timeMonth.' '.$timeDay.'</span><span class="small">'.$timeYear.'</span></div><div class="statusItemContent">'.$data[$i]["statusContent"].'</div></div>';
-  $temp=1;
 }
-if($temp==0){
+if($outputHTML==""){
   $outputHTML = '<a style="padding:15px 0;">Sorry, this page does not exist.</a><script>$(document).ready(function(){$("#nextPageBtn").hide();});</script>';
 }
 ?>
@@ -187,6 +178,8 @@ if($temp==0){
       background-color: #a5a5a5;
     }
     #nextPageBtn,#prevPageBtn{margin:20px 0;}
+    #prevPageBtn{float: left;}
+    #nextPageBtn{float: right;}
 	</style>
   <script>
     var nowPage = <?php echo $page;?>;
@@ -220,6 +213,7 @@ if($temp==0){
       <div class="statusTimeline" id="statusTimeline"><?php echo $outputHTML;?></div>
       <div class="defaultButton" id="prevPageBtn">Prev Page</div>
       <div class="defaultButton" id="nextPageBtn">Next Page</div>
+      <div style="clear:both"></div>
   	</section>
   </body>
 </html>
