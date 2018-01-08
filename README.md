@@ -46,6 +46,8 @@ git clone https://github.com/markqq/DailyLife.git
 ```
 mysql
 use database;
+```
+```mysql
 create table dailylife
 (
    statusDate         varchar(50) not null,
