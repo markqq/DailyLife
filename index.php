@@ -6,14 +6,7 @@ if(isset($_GET["page"])){
 }else{
   $page = 1;
 }
-$sql = mysql_query("select * from dailylife");
-$showed = ($page - 1) * $numberEachTime;
-$data = array();
-while($rows = mysql_fetch_array($sql)){
-  $data[] = $rows;
-  $data[$rows['id']] = $rows;
-  $lastUpdate = $data[$rows['id']]["statusDate"];
-}
+$sql = mysql_query("select * from dailylife order by id desc");
 $outputHTML = "";
 function monthTrans($month){
     switch($month){
@@ -56,19 +49,20 @@ function monthTrans($month){
     }
     return $re;
 }
-for($i=$showed;$i<$showed+$numberEachTime;$i++){
-  if(!isset($data[$i])){
-    continue;
+$count = 0;
+while($rows = mysql_fetch_array($sql)){
+  $count++;
+  if($count>($page-1)*$numberEachTime && $count<$numberEachTime*$page+1){
+    $timeStr = $rows[0];
+    $timeStr = explode(" ", $timeStr);
+    $timeStr = $timeStr[0];
+    $timeStr = explode("-", $timeStr);
+    $timeYear = $timeStr[0];
+    $timeMonth = monthTrans($timeStr[1]);
+    $timeDay = $timeStr[2];
+    $outputHTML = $outputHTML.'<div class="statusItem" data-id="'.$rows[3].'"><div class="statusItemTitle"><span class="big">'.$timeMonth.' '.$timeDay.'</span><span class="small">'.$timeYear.'</span></div><div class="statusItemContent">'.$rows[1].'</div></div>';
   }
-  $timeStr = $data[$i]["statusDate"];
-  $timeStr = explode(" ", $timeStr);
-  $timeStr = $timeStr[0];
-  $timeStr = explode("-", $timeStr);
-  $timeYear = $timeStr[0];
-  $timeMonth = monthTrans($timeStr[1]);
-  $timeDay = $timeStr[2];
-  
-  $outputHTML = $outputHTML . '<div class="statusItem" data-id="'.$data[$i]["id"].'"><div class="statusItemTitle"><span class="big">'.$timeMonth.' '.$timeDay.'</span><span class="small">'.$timeYear.'</span></div><div class="statusItemContent">'.$data[$i]["statusContent"].'</div></div>';
+  $lastUpdate = $rows[0];
 }
 if($outputHTML==""){
   $outputHTML = '<a style="padding:15px 0;">Sorry, this page does not exist.</a><script>$(document).ready(function(){$("#nextPageBtn").hide();});</script>';
@@ -93,6 +87,7 @@ if($outputHTML==""){
     .wrapBox{
     	max-width: 768px;
     	margin:0 auto;
+      padding: 0 10px;
     }
     #header{
     	padding:50px 0 20px 0;
@@ -180,13 +175,11 @@ if($outputHTML==""){
     #nextPageBtn,#prevPageBtn{margin:20px 0;}
     #prevPageBtn{float: left;}
     #nextPageBtn{float: right;}
+    footer{padding:15px 0;color:#8c8c8c;font-size:14px;font-weight:200;text-align: center;}
+    a{text-decoration: none;color:initial;}
 	</style>
   <script>
-    var nowPage = <?php echo $page;?>;
     $(document).ready(function(){
-      if(nowPage==1){
-        $("#prevPageBtn").hide();
-      }
       $("#nextPageBtn").click(function(){
         var nextPage = nowPage+1;
         window.location.href = "?page="+nextPage;
@@ -211,9 +204,19 @@ if($outputHTML==""){
   		  <div class="sectionItem" id="nowTime"><i class="fa fa-calendar"></i> Show Calendar</div>
       </div>
       <div class="statusTimeline" id="statusTimeline"><?php echo $outputHTML;?></div>
-      <div class="defaultButton" id="prevPageBtn">Prev Page</div>
-      <div class="defaultButton" id="nextPageBtn">Next Page</div>
+      <?php
+      if($page>1){
+        echo '<div class="defaultButton" id="prevPageBtn">Prev Page</div>';
+      }
+      $toatlPageNum = ceil($count/$numberEachTime);
+      if($page+1<$toatlPageNum){
+        echo '<div class="defaultButton" id="nextPageBtn">Next Page</div>';
+      }
+      ?>
       <div style="clear:both"></div>
   	</section>
+    <footer>
+      ©tan90° Powered by <a href="//blog.tan90.co/DailyLife">DailyLife</a>
+    </footer>
   </body>
 </html>
