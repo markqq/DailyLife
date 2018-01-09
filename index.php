@@ -6,7 +6,13 @@ if(isset($_GET["page"])){
 }else{
   $page = 1;
 }
-$sql = mysql_query("select * from dailylife order by id desc");
+if(isset($_GET["id"])){
+  $statusID = intval($_GET["id"]);
+  $sql = mysql_query("select * from dailylife where id=".$statusID);
+}else{
+  $sql = mysql_query("select * from dailylife order by id desc");
+}
+$pageURL = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
 $outputHTML = "";
 function monthTrans($month){
     switch($month){
@@ -60,7 +66,7 @@ while($rows = mysql_fetch_array($sql)){
     $timeYear = $timeStr[0];
     $timeMonth = monthTrans($timeStr[1]);
     $timeDay = $timeStr[2];
-    $outputHTML = $outputHTML.'<div class="statusItem" data-id="'.$rows[3].'"><div class="statusItemTitle"><span class="big">'.$timeMonth.' '.$timeDay.'</span><span class="small">'.$timeYear.'</span></div><div class="statusItemContent">'.$rows[1].'</div></div>';
+    $outputHTML = $outputHTML.'<div class="statusItem" data-id="'.$rows[3].'"><div class="statusItemTitle"><span class="big">'.$timeMonth.' '.$timeDay.'</span><span class="small">'.$timeYear.'</span></div><div class="statusItemContent">'.$rows[1].'</div><div class="statusToolBar"><input type="url" value="'.$pageURL.'?id='.$rows[3].'" class="statusURL" id="statusLink-'.$rows[3].'"> <i class="fa fa-link getStatusLinkBtn" title="Status Link" data-status-id="'.$rows[3].'"></i> <a class="likeStatusNum" id="likeStatusNum_'.$rows[3].'">'.$rows[4].'</a> <i class="fa fa-thumbs-o-up likeStatusBtn" title="Like it" data-status-id="'.$rows[3].'"></i></div></div>';
   }
   $lastUpdate = $rows[0];
 }
@@ -172,6 +178,19 @@ if($outputHTML==""){
     .defaultButton:active{
       background-color: #a5a5a5;
     }
+    .statusToolBar{
+      padding:10px 0;
+      text-align: right;
+    }
+    .statusToolBar i{
+      opacity: .5;
+      cursor: pointer;
+    }
+    .statusToolBar i:hover{
+      opacity: .94;
+    }
+    .likeStatusNum{padding-left:15px;}
+    .statusURL{margin-right:10px;display:none;}
     #nextPageBtn,#prevPageBtn{margin:20px 0;}
     #prevPageBtn{float: left;}
     #nextPageBtn{float: right;}
@@ -188,7 +207,28 @@ if($outputHTML==""){
         var prevPage = nowPage-1;
         window.location.href = "?page="+prevPage;
       });
+      $(".getStatusLinkBtn").click(function(){
+        var id = $(this).attr("data-status-id");
+        $("#statusLink-"+id).show();
+        $("#statusLink-"+id).select();
+      });
+      $(".likeStatusBtn").click(function(){
+        var id = $(this).attr("data-status-id");
+        likeStatus(id);
+      });
     });
+    function likeStatus(id){
+      $.getJSON("likeStatus.php?id="+id,function(data){
+        if(data.err==1){
+          alert("You have already liked this status.");
+        }else if(data.err==0){
+          var likeNum = parseInt($("#likeStatusNum_"+id).html());
+          likeNum++;
+          $("#likeStatusNum_"+id).html(likeNum);
+          alert("Thank you.")
+        }
+      });
+    }
   </script>
   </head>
   <body>
