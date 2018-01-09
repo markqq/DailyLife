@@ -4,8 +4,12 @@ include '../conn.php';
 $statusDate=$_POST["statusDate"];
 $statusContent=$_POST["statusContent"];
 $hashTag=$_POST["hashTag"];
-
 $statusContent = str_replace("'","\\'",$statusContent);
+
+if($statusDate=="" || $statusContent==""){
+  echo '{"err":2}';
+  exit();
+}
 
 $q = "INSERT INTO dailylife (statusDate,statusContent,hashTag) values('$statusDate','$statusContent','$hashTag');";
 if(!mysql_query($q, $con)){
