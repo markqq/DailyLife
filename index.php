@@ -7,7 +7,7 @@ if(isset($_GET["page"])){
   $page = 1;
 }
 if(isset($_GET["id"])){
-  $statusID = intval($_GET["id"]);
+  $statusID = intval(mysql_real_escape_string($_GET["id"]));
   $sql = mysql_query("select * from dailylife where id=".$statusID);
 }else{
   $sql = mysql_query("select * from dailylife order by id desc");

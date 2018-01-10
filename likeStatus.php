@@ -1,6 +1,6 @@
 <?php
 include 'conn.php';
-$id = $_GET["id"];
+$id = mysql_real_escape_string($_GET["id"]);
 if(isset($_COOKIE['liked_'.$id])){
 	if($_COOKIE['liked_'.$id]=="1"){
 		echo '{"err":1}';
