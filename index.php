@@ -130,23 +130,6 @@ if($outputHTML==""){
     }
     .statusItem{
       margin:20px 0;
-      -webkit-filter: grayscale(100%);
-      -moz-filter: grayscale(100%);
-      -ms-filter: grayscale(100%);
-      -o-filter: grayscale(100%);
-      filter: grayscale(100%);
-      filter: gray;
-      -webkit-transition: opacity 0.15s ease-out;
-      -moz-transition: opacity 0.15s ease-out;
-      transition: opacity 0.15s ease-out;
-    }
-    .statusItem:hover{
-      -webkit-filter: grayscale(0);
-      -moz-filter: grayscale(0);
-      -ms-filter: grayscale(0);
-      -o-filter: grayscale(0);
-      filter: grayscale(0);
-      filter: initial;
     }
     .statusItemContent{
       color: #666;
@@ -196,6 +179,27 @@ if($outputHTML==""){
     #nextPageBtn{float: right;}
     footer{padding:15px 0;color:#8c8c8c;font-size:14px;font-weight:200;text-align: center;}
     a{text-decoration: none;color:initial;}
+    @media only screen and (min-width:442px){
+      .statusItem{
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+        filter: gray;
+        -webkit-transition: opacity 0.15s ease-out;
+        -moz-transition: opacity 0.15s ease-out;
+        transition: opacity 0.15s ease-out;
+      }
+      .statusItem:hover{
+        -webkit-filter: grayscale(0);
+        -moz-filter: grayscale(0);
+        -ms-filter: grayscale(0);
+        -o-filter: grayscale(0);
+        filter: grayscale(0);
+        filter: initial;
+      }
+    }
 	</style>
   <script>
     $(document).ready(function(){
