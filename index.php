@@ -66,7 +66,11 @@ while($rows = mysql_fetch_array($sql)){
     $timeYear = $timeStr[0];
     $timeMonth = monthTrans($timeStr[1]);
     $timeDay = $timeStr[2];
-    $outputHTML = $outputHTML.'<div class="statusItem" data-id="'.$rows[3].'"><div class="statusItemTitle"><span class="big">'.$timeMonth.' '.$timeDay.'</span><span class="small">'.$timeYear.'</span></div><div class="statusItemContent">'.$rows[1].'</div><div class="statusToolBar"><input type="url" value="'.$pageURL.'?id='.$rows[3].'" class="statusURL" id="statusLink-'.$rows[3].'"> <i class="fa fa-link getStatusLinkBtn" title="Status Link" data-status-id="'.$rows[3].'"></i> <a class="likeStatusNum" id="likeStatusNum_'.$rows[3].'">'.$rows[4].'</a> <i class="fa fa-thumbs-o-up likeStatusBtn" title="Like it" data-status-id="'.$rows[3].'"></i></div></div>';
+    $likeNum = $rows[4];
+    if($likeNum==""){
+      $likeNum = "0";
+    }
+    $outputHTML = $outputHTML.'<div class="statusItem" data-id="'.$rows[3].'"><div class="statusItemTitle"><span class="big">'.$timeMonth.' '.$timeDay.'</span><span class="small">'.$timeYear.'</span></div><div class="statusItemContent">'.$rows[1].'</div><div class="statusToolBar"><input type="url" value="'.$pageURL.'?id='.$rows[3].'" class="statusURL" id="statusLink-'.$rows[3].'"> <i class="fa fa-link getStatusLinkBtn" title="Status Link" data-status-id="'.$rows[3].'"></i> <a class="likeStatusNum" id="likeStatusNum_'.$rows[3].'">'.$likeNum.'</a> <i class="fa fa-thumbs-o-up likeStatusBtn" title="Like it" data-status-id="'.$rows[3].'"></i></div></div>';
   }
   $lastUpdate = $rows[0];
 }
